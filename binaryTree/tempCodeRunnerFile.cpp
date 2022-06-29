@@ -1,1 +1,0 @@
-cout << rootData << " " << rem << endl;
