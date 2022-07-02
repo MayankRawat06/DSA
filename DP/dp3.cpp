@@ -229,18 +229,46 @@ int minCoins2(int n, vector<int> v, int amt)  {
     return dp[amt];
 }
 int mcm(int n, vector<int> v) {
-    vector<vector<int>> m(n, vector<int>(n));
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            if(abs(i - j) == 1) {
-                m[i][j] = v[i] * v[i + 1] * v[j + 1];
+    int s = 0;
+    int e = n - 1;
+    return mcmHelper(v, s, e);
+}
+int mcmHelper1(vector<int> v, int s, int e) {
+    if(s + 1 == e) {
+        return 0;
+    } 
+    vector<vector<int>> dp(e + 1, vector<int>(e + 1, -1));
+    if(dp[s][e] != -1) {
+        return dp[s][e];
+    } 
+    else {
+        dp[s][e] = INT_MAX;
+        for(int k = s + 1; k < e; k++) {
+            int temp = mcmHelper1(v, s, k) + mcmHelper1(v, k, e) + v[s] * v[k] * v[e];
+            dp[s][e] = min(temp, dp[s][e]);
+        }
+        return dp[s][e];
+    }
+}
+int mcm1(int n, vector<int> v) {
+    return mcmHelper1(v, 0, n - 1);
+}
+int mcm2(int n, vector<int> v) {
+    // 0th row, 0th col and diag elements are set to 0
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+    // d - difference 
+    for(int d = 1; d < n - 1; d++) {
+        for(int i = 1; i < n - d; i++) {
+            int j = i + d;
+            int minx = INT_MAX;
+            for(int k = 1; k <= j - 1; k++) {
+                int temp = dp[i][k] + dp[k + 1][j] + v[i - 1] * v[k] * v[j];
+                minx = min(minx, temp);
             }
-            if(i == j) {
-                m[i][j] = 0;
-            }
-            
+            dp[i][j] = minx;
         }
     }
+    return dp[1][n - 1];
 }
 int main() {
     // int n;
@@ -254,15 +282,23 @@ int main() {
     // cin >> x >> y;
     // cout << allPossibleWays(x, y) << endl;
     // cout << allPWays(x, y) << endl;
-    int n;
-    cin >> n;
-    vector<int> v(n);
-    for(int i = 0; i < n; i++) {
-        cin >> v[i];
-    }
-    int num;
-    cin >> num;
-    // cout << coinChange1(n, v, num) << endl;
-    cout << minCoins2(n, v, num) << endl;
-    return 0;
+//     int n;
+//     cin >> n;
+//     vector<int> v(n);
+//     for(int i = 0; i < n; i++) {
+//         cin >> v[i];
+//     }
+//     int num;
+//     cin >> num;
+//     cout << coinChange1(n, v, num) << endl;
+//     cout << minCoins2(n, v, num) << endl;
+       int n;              // n denotes no. of matrices
+       cin >> n;
+       n = n + 1;          // now n denotes no. of entries in array
+       vector<int> v(n);
+       for(int i = 0; i < n; i++) {
+           cin >> v[i];
+       }
+       cout << mcm2(n, v) << endl;
+       return 0;
 }
