@@ -270,6 +270,135 @@ int mcm2(int n, vector<int> v) {
     }
     return dp[1][n - 1];
 }
+string coinTower(int n, int x, int y) {
+    vector<int> dp(n + 1);
+    dp[0] = 0;
+    dp[1] = 1;
+    for(int i = 2; i <= n; i++) {
+        // if for any value of i - 1, i - x, i - y, A loses the game, Then A will definitely win the game
+        if(i - 1 >= 0 && !dp[i - 1]) {
+            dp[i] = 1;
+        }
+        else if(i - x >= 0 && !dp[i - x]) {
+            dp[i] = 1;
+        }
+        else if(i - y >= 0 && !dp[i - y]) {
+            dp[i] = 1;
+        }
+        else {
+            // B will surely win if for every value at i, i - x and i - y, A is winning the game.
+            dp[i] = 0;
+        }
+    }
+    if(dp[n] == 1)  
+    return "Beerus";
+    else 
+    return "Whis";
+}
+int totalSum(vector<int>& nums) {
+    int sum = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        sum += nums[i];
+    }
+    return sum;
+}
+int predictTheWinnerHelper(vector<int>& nums, int i, int j) {
+    if(i > j) {
+        return 0;
+    }
+    if(i == j) {
+        return nums[i];
+    }
+    int curScore = max(
+        nums[i] + min(
+            predictTheWinnerHelper(nums, i + 2, j), 
+            predictTheWinnerHelper(nums, i + 1, j - 1)
+            ), 
+        nums[j] + min(
+            predictTheWinnerHelper(nums, i, j - 2), 
+            predictTheWinnerHelper(nums, i + 1, j - 1)
+            )
+        );
+    return curScore;
+}
+bool predictTheWinner(vector<int>& nums) {
+    int scoreF = predictTheWinnerHelper(nums, 0, nums.size() - 1);
+    int scoreS = totalSum(nums) - scoreF;
+    if(scoreF >= scoreS) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+int maxSquareMatrix(int m, int n, vector<vector<int>> v) {
+    vector<vector<int>> dp(m, vector<int>(n));
+    for(int i = 0; i < m; i++) {
+        dp[i][0] = 1^v[i][0];
+    }
+    for(int i = 1; i < n; i++) {
+        dp[0][i] = 1^v[0][i];
+    }
+    for(int i = 1; i < m; i++) {
+        for(int j = 1; j < n; j++) {
+            if(v[i][j] == 1) {
+                dp[i][j] = 0;
+            }
+            else {
+                dp[i][j] = min(min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+            }
+        }
+    }
+    int maxm = INT_MIN;
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            maxm = max(maxm, dp[i][j]);
+        }
+    }
+    return maxm;
+}
+int sus(string s, string t) {
+    if(s.size() == 0) {
+        return MAX;
+    }
+    if(t.size() == 0) {
+        return 1;
+    }
+    int k = -1;
+    for(k = 0; k < t.size(); k++) {
+        if(t[k] == s[0]) {
+            break;
+        }
+    }
+    if(k == t.size()) {
+        return 1;
+    }
+    return min(1 + sus(s.substr(1), t.substr(k + 1)), sus(s.substr(1), t));
+}
+int sus1(string s, string t) {
+    int m = s.size();
+    int n = t.size();
+    if(m == 0) {
+        return MAX;
+    }
+    if(n == 0) {
+        return 1;
+    }
+    vector<vector<int>> dp(m + 1, vector<int>(n + 1, -1));
+    if(dp[m][n] != -1) {
+        return dp[m][n];
+    }
+    int k = -1;
+    for(k = 0; k < n; k++) {
+        if(t[k] == s[0]) {
+            break;
+        }
+    }
+    if(k == n) {
+        return 1;
+    }
+    return dp[m][n] = min(1 + sus(s.substr(1), t.substr(k + 1)),sus(s.substr(1), t));
+}
 int main() {
     // int n;
     // cin >> n;
@@ -282,23 +411,38 @@ int main() {
     // cin >> x >> y;
     // cout << allPossibleWays(x, y) << endl;
     // cout << allPWays(x, y) << endl;
-//     int n;
-//     cin >> n;
-//     vector<int> v(n);
-//     for(int i = 0; i < n; i++) {
-//         cin >> v[i];
-//     }
-//     int num;
-//     cin >> num;
-//     cout << coinChange1(n, v, num) << endl;
-//     cout << minCoins2(n, v, num) << endl;
-       int n;              // n denotes no. of matrices
-       cin >> n;
-       n = n + 1;          // now n denotes no. of entries in array
-       vector<int> v(n);
-       for(int i = 0; i < n; i++) {
-           cin >> v[i];
-       }
-       cout << mcm2(n, v) << endl;
-       return 0;
+    // int n;
+    // cin >> n;
+    // vector<int> v(n);
+    // for(int i = 0; i < n; i++) {
+    //     cin >> v[i];
+    // }
+    // int num;
+    // cin >> num;
+    // // cout << coinChange1(n, v, num) << endl;
+    // cout << minCoins2(n, v, num) << endl;
+    // int n;              // n denotes no. of matrices
+    // cin >> n;
+    // n = n + 1;          // now n denotes no. of entries in array
+    // vector<int> v(n);
+    // for(int i = 0; i < n; i++) {
+    //     cin >> v[i];
+    // }
+    // cout << mcm2(n, v) << endl;
+    // int n, x, y;
+    // cin >> n >> x >> y;
+    // cout << coinTower(n, x, y) << endl;
+    // int m, n;
+    // cin >> m >> n;
+    // vector<vector<int>> v(m, vector<int>(n));
+    // for(int i = 0; i < m; i++) {
+    //     for(int j = 0; j < n; j++) {
+    //         cin >> v[i][j]; 
+    //     }
+    // }
+    // cout << maxSquareMatrix(m, n, v);
+    string s, t;
+    cin >> s >> t;
+    cout << sus1(s, t) << endl;
+    return 0;
 }
