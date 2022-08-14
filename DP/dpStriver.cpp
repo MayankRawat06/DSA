@@ -156,15 +156,17 @@ int maxSum4(vector<int> v) {
     }
     return prev;
 }
-int main() {
-    int n;
-    cin >> n;
-    vector<int> v(n);
-    for(int i = 0; i < n; i++) {
-        cin >> v[i];
-    }
-    // cout << maxSum2(v, 0) << endl;
-    // cout << frogJump2(v) << endl;
-    cout << maxSum4(v) << endl;
-    return 0;
+int cutRodHelper(vector<int>& p, int i, int n, vector<vector<int>>& dp) {
+    if(i == 0) return n * p[i];
+    if(dp[i][n] != -1) return dp[i][n];
+    int pick, notPick;
+    pick = notPick = INT_MIN;
+    notPick = f(p, i - 1, n, dp);
+    if(n - (i + 1) >= 0) pick = p[i] + f(p, i, n - (i + 1), dp);
+    return dp[i][n] = max(pick, notPick);
+}
+int cutRod(vector<int> &price, int n)
+{
+    vector<vector<int>> dp(n, vector<int>(n + 1, -1));
+    return cutRodHelper(price, n - 1, n, dp);
 }
