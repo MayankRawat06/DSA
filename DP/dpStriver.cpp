@@ -170,3 +170,53 @@ int cutRod(vector<int> &price, int n)
     vector<vector<int>> dp(n, vector<int>(n + 1, -1));
     return cutRodHelper(price, n - 1, n, dp);
 }
+int cutRod1(vector<int> &p, int n)
+{
+    vector<vector<int>> dp(n, vector<int>(n + 1, 0));
+    for(int j = 0; j <= n; j++) 
+        dp[0][j] = j * p[0];
+    for(int i = 1; i < n; i++) {
+        for(int j = 0; j <= n; j++) {
+            int pick, notPick;
+            pick = notPick = INT_MIN;
+            notPick = dp[i - 1][j];
+            if(j - (i + 1) >= 0) pick = p[i] + dp[i][j - (i + 1)];
+            dp[i][j] = max(pick, notPick);
+        }
+    }
+    return dp[n - 1][n];
+}
+int cutRod2(vector<int> &p, int n)
+{
+    vector<int>prev (n + 1, 0);
+    for(int j = 0; j <= n; j++) 
+        prev[j] = j * p[0];
+    for(int i = 1; i < n; i++) {
+        vector<int>curr (n + 1, 0);
+        for(int j = 0; j <= n; j++) {
+            int pick, notPick;
+            pick = notPick = INT_MIN;
+            notPick = prev[j];
+            if(j - (i + 1) >= 0) pick = p[i] + curr[j - (i + 1)];
+            curr[j] = max(pick, notPick);
+        }
+        prev = curr;
+    }
+    return prev[n];
+}
+int cutRod3(vector<int> &p, int n)
+{
+    vector<int>prev (n + 1, 0);
+    for(int j = 0; j <= n; j++) 
+        prev[j] = j * p[0];
+    for(int i = 1; i < n; i++) {
+        for(int j = 0; j <= n; j++) {
+            int pick, notPick;
+            pick = notPick = INT_MIN;
+            notPick = prev[j];
+            if(j - (i + 1) >= 0) pick = p[i] + prev[j - (i + 1)];
+            prev[j] = max(pick, notPick);
+        }
+    }
+    return prev[n];
+}
