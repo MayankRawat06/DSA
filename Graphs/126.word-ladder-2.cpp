@@ -37,4 +37,3 @@ public:
         }
         return res;
     }
-zsh:1: command not found: wq
