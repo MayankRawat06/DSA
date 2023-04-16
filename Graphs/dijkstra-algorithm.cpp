@@ -1,12 +1,12 @@
 class Solution
 {
-	public:
-	//Function to find the shortest distance of all the vertices
+    public:
+    //Function to find the shortest distance of all the vertices
     //from the source vertex S.
     vector <int> dijkstra(int n, vector<vector<int>> adj[], int s)
     {
         // using priority queue -- min heap
-        vector<int> dis(n, INT_MAX);
+        vector<int> dis(n, 1e9);
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         pq.push({0, s});
         dis[s] = 0;
