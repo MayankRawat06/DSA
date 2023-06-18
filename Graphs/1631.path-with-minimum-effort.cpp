@@ -1,27 +1,26 @@
 class Solution {
     vector<int> dirx{-1, 0, 1, 0}, diry{0, -1, 0, 1};
 public:
-    int minimumEffortPath(vector<vector<int>>& heights) {
-        int m = heights.size(), n = heights[0].size();
-        set<pair<int, pair<int, int>>> set;
+    int minimumEffortPath(vector<vector<int>>& v) {
+        int m = v.size(), n = v[0].size();
+        priority_queue<pair<int, pair<int, int>>,
+        vector<pair<int, pair<int, int>>>, 
+        greater<pair<int, pair<int, int>>>> pq;
         vector<vector<int>> dis(m, vector<int>(n, 1e9));
         dis[0][0] = 0;
-        set.insert({0, {0, 0}});
-        while(!set.empty()) {
-            auto it = *set.begin();
-            int diff = it.first, x = it.second.first, y = it.second.second;
-            int curr = heights[x][y];
-            set.erase(it);
-            if(x == m - 1 && y == n - 1) break;
+        pq.push({0, {0, 0}});
+        while(!pq.empty()) {
+            auto it = pq.top(); pq.pop();
+            int r = it.second.first, c = it.second.second, effTillNow = it.first, height = v[r][c];
+            if(r == m - 1 && c == n - 1) break;
             for(int i = 0; i < 4; i++) {
-                int r = x + dirx[i], c = y + diry[i];
-                if(r >= 0 && r < m && c >= 0 && c < n) {
-                    int neighbor = heights[r][c];
-                    int d = max(diff, abs(curr - neighbor));
-                    if(d < dis[r][c]) {
-                        if(dis[r][c] != 1e9) set.erase({dis[r][c], {r, c}});
-                        dis[r][c] = d;
-                        set.insert({d, {r, c}});
+                int nr = r + dirx[i], nc = c + diry[i];
+                if(nr >= 0 && nr < m && nc >= 0 && nc < n) {
+                    int adjHeight = v[nr][nc];
+                    int eff = max(effTillNow, abs(adjHeight - height));
+                    if(dis[nr][nc] > eff) {
+                        dis[nr][nc] = eff;
+                        pq.push({eff, {nr, nc}});
                     }
                 }
             }
