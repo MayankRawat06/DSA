@@ -45,3 +45,42 @@ class Solution
         suc = s;
     }
 };
+
+
+// Better Approach
+
+class Solution
+{
+    public:
+    void findPreSuc(Node* root, Node*& pre, Node*& suc, int key)
+    {
+        // Your code goes here
+        if(!root) return;
+        if(key > root -> key) {
+            pre = root;
+            findPreSuc(root -> right, pre, suc, key);
+        }
+        else if(key < root -> key) {
+            suc = root;
+            findPreSuc(root -> left, pre, suc, key);
+        }
+        else {
+            if(root -> left) {
+                Node *curr = root -> left;
+                // find max val in left subtree - pre
+                while(curr -> right) {
+                    curr = curr -> right;
+                }
+                pre = curr;
+            }
+            if(root -> right) {
+                Node *curr = root -> right;
+                // find min val in right subtree - suc
+                while(curr -> left) {
+                    curr = curr -> left;
+                }
+                suc = curr;
+            }
+        }
+    }
+};
