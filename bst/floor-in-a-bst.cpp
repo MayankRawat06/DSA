@@ -20,3 +20,19 @@ int floor(Node* root, int x) {
     f(root, x);
     return z;
 }
+
+// alternative solution
+
+int floorInBST(TreeNode<int> * root, int x)
+{
+    // Write your code here.
+    if(!root) return -1;
+    if(x == root -> val) return root -> val;
+    else if(x > root -> val) {
+        int z = floorInBST(root -> right, x);
+        return max(z, root -> val);
+    } else {
+        int z = floorInBST(root -> left, x);
+        return z;
+    }
+}
