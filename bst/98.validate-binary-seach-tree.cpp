@@ -27,3 +27,23 @@ public:
         return isValidBST(root -> left) && isValidBST(root -> right);
     }
 };
+
+// TC = O(N) * (O(log n) + O(log n))
+// SC = O(log n) * (O(log n) + O(log n))
+
+class Solution {
+    bool f(TreeNode* root, long long maxi, long long mini) {
+        if(!root) return true;
+        if(root -> val <= mini || root -> val >= maxi) return false;
+        bool ls = true, rs = true;
+        ls = f(root -> left, root -> val, mini), rs = f(root -> right, maxi, root -> val);
+        return ls && rs;
+    }
+public:
+    bool isValidBST(TreeNode* root) {
+        return f(root, LONG_MAX, LONG_MIN);
+    }
+};
+
+// TC = O(N)
+// SC = O(log n)
