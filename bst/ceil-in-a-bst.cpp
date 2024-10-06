@@ -22,3 +22,16 @@ int findCeil(Node* root, int key) {
     return x;
     // Your code here
 }
+
+// Alternative Approach
+
+int findCeil(Node* root, int x) {
+    if (root == NULL) return -1;
+    if(x > root -> data) {
+        return findCeil(root -> right, x);
+    } else if(x < root -> data) {
+        int z = findCeil(root -> left, x);
+        if(z != -1) return min(root -> data, z);
+        else return root -> data;
+    } else return x;
+}
