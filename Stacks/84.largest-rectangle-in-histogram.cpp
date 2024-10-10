@@ -21,3 +21,46 @@ public:
         return res;
     }
 };
+
+
+
+
+// Alternative and readable solution
+
+
+class Solution {
+    vector<int> fpse(vector<int>& v) {
+        vector<int> res;
+        stack<int> s;
+        int n = v.size();
+        for(int i = 0; i < n; i++) {
+            while(!s.empty() && v[s.top()] >= v[i]) s.pop();
+            s.empty() ? res.push_back(-1) : res.push_back(s.top());
+            s.push(i);
+        }
+        return res;
+    }
+    vector<int> fnse(vector<int>& v) {
+        stack<int> s;
+        int n = v.size();
+        vector<int> res(n);
+        for(int i = n - 1; i >= 0; i--) {
+            while(!s.empty() && v[s.top()] >= v[i]) s.pop();
+            s.empty() ? res[i] = n : res[i] = s.top();
+            s.push(i);
+        }
+        return res;
+    }
+public:
+    int largestRectangleArea(vector<int>& v) {
+        vector<int> pse = fpse(v);
+        vector<int> nse = fnse(v);
+        int maxi = 0, n = v.size();
+        for(int i = 0; i < n; i++) {
+            int h = v[i], w = nse[i] - pse[i] - 1;
+            int area = h * w;
+            maxi = max(maxi, area);
+        }
+        return maxi;
+    }
+};
