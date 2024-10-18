@@ -21,3 +21,31 @@ class Solution{
         return -1;
     }
 };
+
+
+
+// Alternative solution
+
+class Solution {
+  public:
+    int kthElement(int k, vector<int>& v1, vector<int>& v2) {
+        // code here
+        int m = v1.size(), n = v2.size();
+        if(m > n) return kthElement(k, v2, v1);
+        int low = max(k - n, 0), high = min(k, m);
+        while(low <= high) {
+            int c1 = low + (high - low) / 2;
+            int c2 = k - c1;
+            int l1 = v1[c1 - 1];
+            int l2 = v2[c2 - 1];
+            int r1 = c1 < m ? v1[c1] : INT_MAX;
+            int r2 = c2 < n ? v2[c2] : INT_MAX;
+            if(l1 <= r2 && l2 <= r1) {
+                return max(l1, l2);
+            } else if(l1 > r2) {
+                high = c1 - 1;
+            } else low = c1 + 1;
+        }
+        return -1;
+    }
+};
