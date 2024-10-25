@@ -40,3 +40,43 @@ public:
         return h;
     }
 };
+
+
+// alternative solution
+
+class Solution {
+    ListNode* reverse(ListNode* head) {
+        ListNode *curr = head;
+        ListNode *prev = NULL;
+        while(curr) {
+            ListNode *next = curr -> next;
+            curr -> next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode *s = head, *p = NULL, *temp = head, *newHead = NULL;
+        int count = 0;
+        while(temp) {
+            count++;
+            if(count == k) {
+                if(p) p -> next = NULL;
+                ListNode *f = temp -> next; 
+                temp -> next = NULL;
+                temp = reverse(s);
+                if(!newHead) newHead = temp;
+                s -> next = f;
+                if(p) p -> next = temp;
+                temp = s;
+                p = s;
+                s = f;
+                count = 0;
+            }
+            temp = temp -> next;
+        }
+        return newHead;
+    }
+};
