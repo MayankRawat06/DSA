@@ -49,3 +49,67 @@ public:
         return NULL;
     }
 };
+
+
+// alternative
+
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *t1 = headA, *t2 = headB;
+        while(t1 && t2) {
+            t1 = t1 -> next;
+            t2 = t2 -> next;
+        }
+        int countA = 0, countB = 0;
+        while(t1) {
+            t1 = t1 -> next;
+            countA++;
+        }
+        while(t2) {
+            t2 = t2 -> next;
+            countB++;
+        }
+        t1 = headA, t2 = headB;
+        if(countA > 0) {
+            while(countA > 0) {
+                t1 = t1 -> next;
+                countA--;
+            }
+        } else {
+            while(countB > 0) {
+                t2 = t2 -> next;
+                countB--;
+            }
+        }
+        while(t1 && t2) {
+            if(t1 == t2) return t1;
+            t1 = t1 -> next;
+            t2 = t2 -> next;
+        }
+        return NULL;
+    }
+};
+
+
+
+
+
+
+
+
+// short and optimal 
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *t1 = headA, *t2 = headB;
+        while(t1 != t2) {
+            t1 = t1 ? t1 -> next : headB; 
+            t2 = t2 ? t2 -> next : headA;
+        }
+        return t1;
+    }
+};
+
+

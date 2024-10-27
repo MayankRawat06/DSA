@@ -39,3 +39,32 @@ public:
         return f(head, k % l);
     }
 };
+
+
+// optimal Solution
+
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(!head || !head -> next || k == 0) return head;
+        ListNode *temp = head;
+        int n = 1;
+        while(temp) {
+            n++;
+            temp = temp -> next;
+            if(!temp -> next) {
+                temp -> next = head;
+                break;
+            }
+        }
+        k %= n;
+        temp = head;
+        int z = n - k - 1;
+        while(z--) {
+            temp = temp -> next;
+        }
+        ListNode *x = temp -> next;
+        temp -> next = NULL;
+        return x;
+    }
+};
