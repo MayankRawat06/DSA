@@ -28,3 +28,42 @@ public:
         return f(0, adj, color);
     }
 };
+
+
+// alternative solution with different params
+
+class Solution {
+    bool possible(int node, vector<vector<int>>& adj, vector<int>& vis, int color) {
+        for(int x : adj[node]) {
+            if(vis[x] == color) return false;
+        }
+        return true;
+    }
+    bool dfs(int node, vector<int>& vis, vector<vector<int>>& adj, int m) {
+        int n = vis.size();
+        if(node == n) return true;
+        for(int i = 0; i < m; i++) {
+            vis[node] = i;
+            if(possible(node, adj, vis, i)) {
+                if(dfs(node + 1, vis, adj, m)) return true;
+            }
+            vis[node] = -1;
+        }
+        return false;
+    }
+public:
+    bool graphColoring(int n, vector<pair<int, int>>& v, int m) {
+        // code here
+        vector<vector<int>> adj(n);
+        for(int i = 0; i < v.size(); i++) {
+            pair<int, int> e = v[i];
+            // ignore self-loops
+            if(e.first != e.second) {
+                adj[e.first].push_back(e.second);
+                adj[e.second].push_back(e.first);
+            }
+        }
+        vector<int> vis(n, -1);
+        return dfs(0, vis, adj, m);
+    }
+};
