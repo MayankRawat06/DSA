@@ -16,3 +16,28 @@ public:
         return count;
     }
 };
+
+
+// optimal solution 
+
+class Solution {
+    int atMost(vector<int>& v, int k) {
+        int n = v.size();
+        int count = 0;
+        int odds = 0;
+        int i = 0;
+        for(int j = 0; j < n; j++) {
+            odds = v[j] % 2 ? odds + 1 : odds;
+            while(i <= j && odds > k) {
+                if(v[i] % 2) odds--;
+                i++;
+            }
+            count += j - i + 1;
+        }
+        return count;
+    }
+public:
+    int numberOfSubarrays(vector<int>& v, int k) {
+        return atMost(v, k) - atMost(v, k - 1);
+    }
+};
